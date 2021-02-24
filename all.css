@@ -1,0 +1,302 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* 頁面開始 */
+
+/* 燈箱效果 */
+.backdrop{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    overflow: hidden;
+    display: none;
+}
+
+.spinner-border.text-success{
+    position: fixed;
+    width: 100px;
+    height: 100px;
+    z-index: 101;
+    left: 50%;
+    top: 50%;
+    margin: -20px 0 0 -20px;
+    display: none;
+}
+/* 主頁開始 */
+.wrap {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+.banner {
+    height: 380px;
+    background-image: url("./assets/Hero.png");
+    background-size: cover;
+    background-position: center center;
+    position: relative;
+}
+.banner .title {
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.banner h1 {
+    font-size: 40px;
+    color: #fff;
+}
+.region {
+    margin-top: 96px;
+    width: 45%;
+    font-size: 18px;
+    padding: 5px 0 5px 10px;
+    border: 2px solid #fff;
+    outline: none;
+    position: relative;
+    -webkit-appearance: none;
+    background: url('./assets/icons_down.png') no-repeat 98% 50% transparent;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+.region option span{
+    display: none;
+}
+.hotspot {
+    position: absolute;
+    width: 800px;
+    max-width: 100%;
+    min-height: 112px;
+    background-color: #fff;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -84px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px;
+}
+.hotspot h2 {
+    font-size: 18px;
+    margin: 20px 26px 14px;
+}
+.hotspot .btns {
+    margin-left: 51px;
+}
+.hotspot a {
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    padding: 11px 35px;
+    border-radius: 5px;
+}
+.hotspot a:nth-child(1) {
+    background-color: #8a82cc;
+}
+.hotspot a:nth-child(2) {
+    background-color: #ffa782;
+}
+.hotspot a:nth-child(3) {
+    background-color: #f5d105;
+}
+.hotspot a:nth-child(4) {
+    background-color: #559ac8;
+}
+.hotspot a:hover {
+    filter: brightness(50%);
+    text-decoration: none;
+    color: white;
+}
+/* 水平分隔線 */
+.line {
+    height: 2px;
+    max-width: 900px;
+    margin: 133px auto 0;
+    background-image: linear-gradient(to right, #559ac8 50%, rgba(255, 255, 255, 0) 0%);
+    background-position: bottom;
+    background-size: 15px 2px;
+    background-repeat: repeat-x;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.triangle {
+    width: 24px;
+    height: 24px;
+    border: 1px #559ac8 solid;
+    border-radius: 50%;
+    position: relative;
+    background-color: white;
+}
+.triangle::before {
+    content: "";
+    position: absolute;
+    border-right: 7px solid white;
+    border-left: 7px solid white;
+    border-top: 10px solid blue;
+    display: inline-block;
+    left: 50%;
+    top: 57%;
+    transform: translate(-50%, -50%);
+}
+/* 景點圖塊 */
+.area {
+    margin-top: 76px;
+}
+.area h2 {
+    font-size: 36px;
+    text-align: center;
+    color: #8a82cc;
+}
+.area .attractions{
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0 3.5%;
+}
+@media(max-width:1000px){
+    .area .attractions{
+        justify-content: center;
+    }
+}
+.card{
+    width: 464px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 3px 0;
+    margin-bottom: 36px;
+}
+.img-fluid{
+    overflow: hidden;
+}
+.card .pic{
+    background-size: cover;
+    background-position: center center;
+    height: 150px;
+    position: relative;
+    transition: all 0.5s ease;
+}
+.card .pic:hover{
+    cursor: pointer;
+    transform: scale(1.1,1.1);
+}
+.card .pic h3{
+    position: absolute;
+    left: 22px;
+    bottom: 11px;
+    color: white;
+    font-size: 24px;
+}
+.card .pic p{
+    position: absolute;
+    right: 19px;
+    bottom: 11px;
+    color: white;
+}
+.card .content{
+    padding: 0 22px 22px;
+    position: relative;
+}
+.card .content p{
+    margin-top: 16px;
+}
+.card .content p:nth-child(2) img{
+    margin-right: 2px;
+}
+.card .content p:nth-child(3) img{
+    margin-left: 2px;
+    margin-right: 4px;
+}
+.card .content p:nth-child(4) img{
+    margin-right: 4px;
+}
+.card .content p:nth-child(4){
+    position: absolute;
+    right: 24px;
+    bottom: 19px;
+}
+.pages{
+    margin-bottom: 40px;
+}
+.pages ul{
+    display: flex;
+    justify-content: center;
+}
+.pages ul a{
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #4A4A4A;
+}
+/* .pages ul a:focus{
+    color: #559AC8;
+} */
+.footer{
+    padding: 24px 0;
+    background-color: #559AC8;
+    text-align: center;
+    font-size: 14px;
+}
+.footer h2{
+    margin-bottom: 15px;
+    color: #fff;
+}
+.footer p{
+    color: #FFD366;
+}
+/* 向上箭頭 */
+.arrow{
+    position: fixed;
+    left: 85%;
+    bottom: 5%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: none;
+}
