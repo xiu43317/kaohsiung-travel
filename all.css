@@ -149,9 +149,12 @@ table {
     background-color: #559ac8;
 }
 .hotspot a:hover {
-    filter: brightness(50%);
+    -webkit-filter: brightness(50%);
     text-decoration: none;
     color: white;
+}
+.hotspot a:active{
+    -webkit-filter: sepia(80%);
 }
 /* 水平分隔線 */
 .line {
@@ -274,9 +277,9 @@ table {
     text-decoration: none;
     color: #4A4A4A;
 }
-/* .pages ul a:focus{
-    color: #559AC8;
-} */
+.pages ul a:hover{
+    color: #559AC8 !important;
+}
 .footer{
     padding: 24px 0;
     background-color: #559AC8;
