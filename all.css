@@ -281,6 +281,9 @@ table {
 .pages ul a:hover{
     color: #559AC8 !important;
 }
+.pages ul a.stop:hover{
+    color: #4A4A4A !important;
+}
 .footer{
     padding: 24px 0;
     background-color: #559AC8;

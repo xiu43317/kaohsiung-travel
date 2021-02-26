@@ -120,17 +120,23 @@ function arrow_color(totalPage) {
     if (currentPage == 1) {
         links[0].style.opacity = 0.5;
         links[0].style.cursor = "default";
+        // 添加class讓hover不能變色
+        links[0].className = 'stop';
     } else {
         links[0].style.opacity = 1;
         links[0].style.cursor = "pointer";
+        // 換頁以後要將class拿掉恢復hover變色
+        links[0].classList.remove('stop');
     }
     if (currentPage == totalPage) {
         links[totalPage + 1].style.opacity = 0.5;
         links[totalPage + 1].style.cursor = "default";
+        links[totalPage+1].className = 'stop';
     }
     else {
         links[totalPage + 1].style.opacity = 1;
         links[totalPage + 1].style.cursor = "pointer";
+        links[totalPage + 1].classList.remove('stop');
     }
 }
 
@@ -199,7 +205,7 @@ function add_item(area, zip, list) {
         e.preventDefault();
         if (currentPage > 1) {
             currentPage--;
-            show_card(currentPage, displayCard);
+            show_card(currentPage, displayCard,filter);
             page_color(totalPage);
             arrow_color(totalPage);
         }
