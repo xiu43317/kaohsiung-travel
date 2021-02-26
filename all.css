@@ -58,7 +58,6 @@ table {
     top: 0;
     z-index: 100;
     overflow: hidden;
-    display: none;
 }
 
 .spinner-border.text-success{
@@ -69,7 +68,6 @@ table {
     left: 50%;
     top: 50%;
     margin: -20px 0 0 -20px;
-    display: none;
 }
 /* 主頁開始 */
 .wrap {
