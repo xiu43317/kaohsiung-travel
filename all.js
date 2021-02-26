@@ -1,31 +1,18 @@
-//地區
-let RegionOption = ["三民區", "仁武區", "內門區", "六龜區", "前金區", "前鎮區", "大寮區", "大樹區", "大社區", "小港區", "岡山區", "左營區", "彌陀區", "新興區", "旗山區", "旗津區", "杉林區", "林園區", "桃源區", "梓官區", "楠梓區", "橋頭區", "永安區", "湖內區", "燕巢區", "田寮區", "甲仙區", "美濃區", "苓雅區", "茂林區", "茄萣區", "路竹區", "那瑪夏區", "阿蓮區", "鳥松區", "鳳山區", "鹽埕區", "鼓山區"];
-//郵遞區號
-let Zip = ["807", "814", "845", "844", "801", "806", "831", "840", "815", "812", "820", "813", "827", "800", "842", "805", "846", "832", "848", "826", "811", "825", "828", "829", "824", "823", "847", "843", "802", "851", "852", "821", "849", "822", "833", "830", "803", "804"];
-//定義輸入欄
-let region = document.getElementById('region');
-let option = "<option disabled selected>- -請選擇行政區- -</option>";
-let list = [];
-
-// 選擇到的資料儲存到此陣列
-let filter = [];
-// 總頁數
-let totalPage = 0;
+// 定義輸入欄
+const region = document.getElementById('region');
 // 設定當前頁數
 let currentPage = 1;
-// 設定顯示的地區
-let selectedPlace = "";
-// 設定要顯示頁數的HTML標籤
-let pageStr = "";
-// 頁籤顯示
-let links;
+// 定義向上箭頭圖示
+const arrow = document.querySelector('.arrow');
 // 設定底下顯示頁數筆數
 const displayPage = 5;
 // 每頁顯示卡片數
 const cardNumber = 6;
+// 熱門區名單
+const hotspots = ['苓雅區', '三民區', '新興區', '鹽埕區'];
 
-//顯示資料
-function show_card(thisPage, finalCard) {
+// 顯示資料
+function show_card(thisPage, finalCard, filter) {
     //先清除卡片欄所有元素，因為使用append會累加
     let card_remove = document.querySelectorAll('.card');
     for (let i = 0; i < card_remove.length; i++) {
@@ -104,9 +91,11 @@ function show_card(thisPage, finalCard) {
         document.querySelector('.attractions').appendChild(card);
     }
 }
-//顯示頁數
-function show_pages() {
-    pageStr = "";
+
+// 顯示頁數
+function show_pages(totalPage) {
+    // 設定要顯示頁數的HTML標籤
+    let pageStr = "";
     pageStr += "<li><a href='#' id='prev'>< prev</a> </li>";
     for (let i = 0; i < totalPage; i++) {
         pageStr += `<li><a href='#'>${i + 1}</a></li>`
@@ -123,9 +112,11 @@ function show_pages() {
         }
     }
     links[1].style.color = "#559AC8";
+    return links;
 }
-//變換往前，往後箭頭顏色。當到達最後或首頁即變色不能點擊 
-function arrow_color() {
+
+// 變換往前，往後箭頭顏色。當到達最後或首頁即變色不能點擊 
+function arrow_color(totalPage) {
     if (currentPage == 1) {
         links[0].style.opacity = 0.5;
         links[0].style.cursor = "default";
@@ -142,8 +133,9 @@ function arrow_color() {
         links[totalPage + 1].style.cursor = "pointer";
     }
 }
+
 // 顯示當前頁面頁籤顏色
-function page_color() {
+function page_color(totalPage) {
     for (let j = 0; j < links.length; j++) {
         if (j == currentPage) {
             links[j].style.color = "#559AC8";
@@ -151,18 +143,19 @@ function page_color() {
             links[j].style.color = "#4A4A4A";
         }
     }
-    arrow_color();
+    arrow_color(totalPage);
 }
-//改變標題以及輸入要顯示的資訊
-function add_item(area, zip) {
+
+// 改變標題以及輸入要顯示的資訊
+function add_item(area, zip, list) {
     document.querySelector('.area h2').textContent = area;
     region.value = area;
-    //移除全部元素
-    filter = [];
+    // 選擇到的資料儲存到此陣列
+    let filter = [];
     if (area == "全部") {
-        for (let i = 0; i < Zip.length; i++) {
+        for (let i = 0; i < zip.length; i++) {
             for (let j = 0; j < list.data.XML_Head.Infos.Info.length; j++) {
-                if (Zip[i] == list.data.XML_Head.Infos.Info[j].Zipcode) {
+                if (zip[i].zip == list.data.XML_Head.Infos.Info[j].Zipcode) {
                     filter.push(list.data.XML_Head.Infos.Info[j]);
                 }
             }
@@ -177,9 +170,10 @@ function add_item(area, zip) {
     //顯示當前頁面卡片
     let displayCard = cardNumber;
     if (filter.length < displayCard) displayCard = filter.length;
-    show_card(1, displayCard);
-    selectedPlace = area;
+    show_card(1, displayCard, filter);
     //console.log(filter);
+    // 總頁數
+    let totalPage = 0;
     if (filter.length % displayCard == 0) {
         totalPage = filter.length / displayCard;
     } else {
@@ -188,13 +182,13 @@ function add_item(area, zip) {
     //console.log(totalPage);
 
     //顯示頁數
-    show_pages();
+    let links = show_pages(totalPage);
 
     //變換往前，往後箭頭顏色。當到達最後或首頁即變色不能點擊 
-    arrow_color();
+    arrow_color(totalPage);
 
     // 顯示當前頁面頁籤顏色
-    page_color();
+    page_color(totalPage);
 
     let prev = links[0];
     let next = links[totalPage + 1];
@@ -206,8 +200,8 @@ function add_item(area, zip) {
         if (currentPage > 1) {
             currentPage--;
             show_card(currentPage, displayCard);
-            page_color();
-            arrow_color();
+            page_color(totalPage);
+            arrow_color(totalPage);
         }
     })
 
@@ -221,9 +215,9 @@ function add_item(area, zip) {
             } else {
                 currentCard = displayCard;
             }
-            show_card(currentPage, currentCard);
-            page_color();
-            arrow_color();
+            show_card(currentPage, currentCard, filter);
+            page_color(totalPage);
+            arrow_color(totalPage);
         }
     })
 
@@ -237,34 +231,12 @@ function add_item(area, zip) {
             } else {
                 currentCard = displayCard;
             }
-            show_card(i, currentCard);
-            page_color();
-            arrow_color();
+            show_card(i, currentCard, filter);
+            page_color(totalPage);
+            arrow_color(totalPage);
             //console.log(currentPage);
         })
     }
-}
-
-//地區輸入欄改變狀態時候
-region.addEventListener('change', function () {
-    let zip;
-    if (region.value == "全部") {
-        zip = "123";
-        add_item(region.value, zip);
-    } else {
-        zip = Zip[region.selectedIndex - 2];
-        add_item(region.value, zip);
-    }
-});
-
-// 點擊連結換頁
-let btns = document.querySelectorAll('.hotspot a');
-for (let i = 0; i < btns.length; i++) {
-    btns[i].addEventListener('click', function (e) {
-        e.preventDefault();
-        region.value = btns[i].textContent;
-        add_item(btns[i].textContent, btns[i].dataset.zip);
-    })
 }
 
 // 箭頭向上到頂，使用遞迴寫法
@@ -272,17 +244,10 @@ function scrollToTop() {
     setTimeout(() => {
         if (document.documentElement.scrollTop > 0) {
             document.documentElement.scrollTop -= 15;
-            this.scrollToTop();
+            return scrollToTop();
         }
     }, 1);
 }
-
-// 定義向上箭頭圖示
-let arrow = document.querySelector('.arrow');
-arrow.addEventListener('click', function (e) {
-    e.preventDefault();
-    scrollToTop();
-});
 
 // 監聽滾動時候的狀態，隱藏箭頭
 window.addEventListener('scroll', function () {
@@ -340,28 +305,96 @@ window.addEventListener('click', function () {
 // 啟動時候監聽
 window.addEventListener('load', function () {
     // 地區輸入欄資訊
-    option += "<option>全部</option>"
-    for (let i = 0; i < RegionOption.length; i++) {
-        option += "<option>" + RegionOption[i] + "</option>";
-    }
-    region.innerHTML = option;
+    let option = "<option disabled selected>- -請選擇行政區- -</option>";
+    arrow.addEventListener('click', scrollToTop);
 
-    //ajax取得資料
-    let xhr = new XMLHttpRequest();
     let loading = document.getElementById('loading');
     let backdrop = document.getElementById('backdrop');
-    xhr.onreadystatechange = function () {
-        loading.style.display = "block";
-        backdrop.style.display = "block";
+    let zone;
+    let areaStatus = false;
+    let infoStatus = false;
+    let list;
+
+    // 啟動讀取頁面
+    loading.style.display = "block";
+    backdrop.style.display = "block";
+
+    // 擷取地區資料
+    let xhrZip = new XMLHttpRequest();
+    xhrZip.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            let cities = JSON.parse(this.responseText);
+            zone = cities.find(city => city.name == "高雄市").districts;
+            zone = zone.filter(area => area.name !== "東沙群島" && area.name !== "南沙群島");
+            //console.log(zone);
+            option += "<option>全部</option>"
+            for (let i = 0; i < zone.length; i++) {
+                option += "<option>" + zone[i].name + "</option>";
+            }
+            region.innerHTML = option;
+
+            // 動態新增按鈕
+            let btns = document.querySelector('.hotspot .btns');
+            let btnStr = "";
+            for (let i = 0; i < hotspots.length; i++) {
+                let zipNumber;
+                zipNumber = zone.findIndex( position => position.name === hotspots[i]);
+                //console.log(zone[zipNumber].zip);
+                btnStr += `<a href="#" data-zip="${zone[zipNumber].zip}">${hotspots[i]}</a>`;
+            }
+            btns.innerHTML = btnStr;
+
+            // 設定按鍵連結到正確頁面 
+            btns.addEventListener('click',function(e){
+                e.preventDefault();
+                if(e.target.nodeName !== 'A') return;
+                let zip = e.target.dataset.zip;
+                let area = e.target.textContent;
+                //console.log(area);
+                region.value = area;
+                add_item(area, zip, list);
+            })
+
+            // 判斷是否讀取結束
+            areaStatus = true;
+            if (infoStatus == true && areaStatus == true) {
+                loading.style.display = "none";
+                backdrop.style.display = "none";
+            }
+        }
+    }
+    xhrZip.open('GET', 'https://gist.githubusercontent.com/abc873693/2804e64324eaaf26515281710e1792df/raw/a1e1fc17d04b47c564bbd9dba0d59a6a325ec7c1/taiwan_districts.json', true);
+    xhrZip.send();
+
+    //ajax取得景點 資料
+    let xhrView = new XMLHttpRequest();
+    xhrView.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             list = JSON.parse(this.responseText);
             // 顯示全部資料
-            add_item("全部", "123");
-            // 讀取資料後關閉讀取圖示 
-            loading.style.display = "none";
-            backdrop.style.display = "none";
+            add_item("全部", zone, list);
+
+            infoStatus = true;
+            if (infoStatus == true && areaStatus == true) {
+                // 讀取資料後關閉讀取圖示 
+                loading.style.display = "none";
+                backdrop.style.display = "none";
+            }
         }
     }
-    xhr.open('GET', 'https://api.kcg.gov.tw/api/service/get/9c8e1450-e833-499c-8320-29b36b7ace5c', true);
-    xhr.send();
+    xhrView.open('GET', 'https://api.kcg.gov.tw/api/service/get/9c8e1450-e833-499c-8320-29b36b7ace5c', true);
+    xhrView.send();
+
+    //地區輸入欄改變狀態時候
+    region.addEventListener('change', function () {
+        let zip;
+        if (region.value == "全部") {
+            zip = zone;
+            add_item(region.value, zip, list);
+        } else {
+            zip = zone.find(area => area.name == region.value).zip;
+            //console.log(zip);
+            add_item(region.value, zip, list);
+        }
+    });
 })
