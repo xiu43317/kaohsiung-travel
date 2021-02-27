@@ -1,9 +1,5 @@
 // 定義輸入欄
 const region = document.getElementById('region');
-// 設定當前頁數
-let currentPage = 1;
-// 設定不同區域總頁面
-let links = [];
 // 定義向上箭頭圖示
 const arrow = document.querySelector('.arrow');
 // 背景讀取燈箱效果
@@ -15,6 +11,28 @@ const displayPage = 5;
 const cardNumber = 6;
 // 熱門區名單
 const hotspots = ['苓雅區', '三民區', '新興區', '鹽埕區'];
+// 設定當前頁數
+const currentPage = new current_page(1);
+// 設定不同區域總頁面
+const links = new page_array();
+
+
+// 顯示當前頁籤的閉包
+function current_page(x){
+    let num = x;
+    return function (y){
+        if(!y) return num;
+        return num = y;
+    }
+}
+// 初始化所有頁籤的閉包
+function page_array(){
+    let a = "沒有資料";
+    return function (b){
+        if (!b) return a;
+        return a = b;
+    }
+}
 
 // 顯示資料
 function show_card(thisPage, finalCard, filter) {
@@ -107,50 +125,50 @@ function show_pages(totalPage) {
     }
     pageStr += "<li><a href='#' id='next'>next ></a> </li>";
     document.querySelector('.pages ul').innerHTML = pageStr;
-    currentPage = 1;
-    links = document.querySelectorAll('.pages ul a');
+    currentPage(1);
+    links(document.querySelectorAll('.pages ul a'));
 
     //隱藏超出範圍，一樣要考量到prev與next做加減 
-    if (currentPage <= displayPage) {
-        for (let i = displayPage + 1; i < links.length - 1; i++) {
-            links[i].style.display = "none";
+    if (currentPage() <= displayPage) {
+        for (let i = displayPage + 1; i < links().length - 1; i++) {
+            links()[i].style.display = "none";
         }
     }
-    links[1].style.color = "#559AC8";
+    links()[1].style.color = "#559AC8";
 }
 
 // 變換往前，往後箭頭顏色。當到達最後或首頁即變色不能點擊 
 function arrow_color(totalPage) {
-    if (currentPage === 1) {
-        links[0].style.opacity = 0.5;
-        links[0].style.cursor = "default";
+    if (currentPage() === 1) {
+        links()[0].style.opacity = 0.5;
+        links()[0].style.cursor = "default";
         // 添加class讓hover不能變色
-        links[0].className = 'stop';
+        links()[0].className = 'stop';
     } else {
-        links[0].style.opacity = 1;
-        links[0].style.cursor = "pointer";
+        links()[0].style.opacity = 1;
+        links()[0].style.cursor = "pointer";
         // 換頁以後要將class拿掉恢復hover變色
-        links[0].classList.remove('stop');
+        links()[0].classList.remove('stop');
     }
-    if (currentPage === totalPage) {
-        links[totalPage + 1].style.opacity = 0.5;
-        links[totalPage + 1].style.cursor = "default";
-        links[totalPage + 1].className = 'stop';
+    if (currentPage() === totalPage) {
+        links()[totalPage + 1].style.opacity = 0.5;
+        links()[totalPage + 1].style.cursor = "default";
+        links()[totalPage + 1].className = 'stop';
     }
     else {
-        links[totalPage + 1].style.opacity = 1;
-        links[totalPage + 1].style.cursor = "pointer";
-        links[totalPage + 1].classList.remove('stop');
+        links()[totalPage + 1].style.opacity = 1;
+        links()[totalPage + 1].style.cursor = "pointer";
+        links()[totalPage + 1].classList.remove('stop');
     }
 }
 
 // 顯示當前頁面頁籤顏色
 function page_color(totalPage) {
-    for (let j = 0; j < links.length; j++) {
-        if (j === currentPage) {
-            links[j].style.color = "#559AC8";
+    for (let j = 0; j < links().length; j++) {
+        if (j === currentPage()) {
+            links()[j].style.color = "#559AC8";
         } else {
-            links[j].style.color = "#4A4A4A";
+            links()[j].style.color = "#4A4A4A";
         }
     }
     arrow_color(totalPage);
@@ -206,12 +224,12 @@ function add_item(area, zip, list) {
 
 // 往前按鍵
 function foreward(totalPage, filter, displayCard) {
-    let prev = links[0];
+    let prev = links()[0];
     prev.addEventListener('click', function (e) {
         e.preventDefault();
-        if (currentPage > 1) {
-            currentPage--;
-            show_card(currentPage, displayCard, filter);
+        if (currentPage() > 1) {
+            currentPage(currentPage()-1);
+            show_card(currentPage(), displayCard, filter);
             page_color(totalPage);
             arrow_color(totalPage);
         }
@@ -220,17 +238,17 @@ function foreward(totalPage, filter, displayCard) {
 
 // 往後按鍵 
 function backward(totalPage, filter, displayCard) {
-    let next = links[links.length - 1];
+    let next = links()[links().length - 1];
     next.addEventListener('click', function (e) {
         e.preventDefault();
-        if (currentPage < totalPage) {
-            currentPage++;
-            if (currentPage == totalPage && filter.length < currentPage * displayCard) {
+        if (currentPage() < totalPage) {
+            currentPage(currentPage()+1);
+            if (currentPage() == totalPage && filter.length < currentPage() * displayCard) {
                 currentCard = filter.length % displayCard;
             } else {
                 currentCard = displayCard;
             }
-            show_card(currentPage, currentCard, filter);
+            show_card(currentPage(), currentCard, filter);
             page_color(totalPage);
             arrow_color(totalPage);
         }
@@ -241,9 +259,9 @@ function backward(totalPage, filter, displayCard) {
 function click_page(totalPage, filter, displayCard) {
     let currentCard = 0;
     for (let i = 1; i <= totalPage; i++) {
-        links[i].addEventListener('click', function (e) {
+        links()[i].addEventListener('click', function (e) {
             e.preventDefault();
-            currentPage = i;
+            currentPage(i);
             if (i == totalPage && displayCard * i > filter.length) {
                 currentCard = filter.length % displayCard;
             } else {
@@ -272,38 +290,38 @@ function show_limit_pages() {
     // 顯示起始頁與結束頁
     let start = 0, end = 0;
     // 顯示最初要顯示的頁籤
-    if (currentPage <= displayPage) {
+    if (currentPage() <= displayPage) {
         // 超過顯示頁籤的其他頁籤全部隱藏
-        for (let i = displayPage + 1; i < links.length - 1; i++) {
-            links[i].style.display = "none";
+        for (let i = displayPage + 1; i < links().length - 1; i++) {
+            links()[i].style.display = "none";
         }
         // 前後prev與next兩元素要加到長度裡面
-        if (links.length > displayPage + 2) {
+        if (links().length > displayPage + 2) {
             for (let i = 1; i <= displayPage; i++) {
-                links[i].style.display = "block";
+                links()[i].style.display = "block";
             }
         }
     }
     // 當前頁面剛好是顯示頁籤的倍數，也就是所謂邊界條件
-    if (currentPage % displayPage === 0) {
+    if (currentPage() % displayPage === 0) {
         // 起始頁本身要算進去，故需要+1
-        start = currentPage - (displayPage) + 1;
-        end = currentPage;
+        start = currentPage() - (displayPage) + 1;
+        end = currentPage();
     } else {
         // 非顯示頁籤倍數時候，需要判斷是在顯示頁籤的多少倍範圍內
-        start = Math.floor(currentPage / displayPage) * displayPage + 1;
-        end = Math.ceil(currentPage / displayPage) * displayPage;
+        start = Math.floor(currentPage() / displayPage) * displayPage + 1;
+        end = Math.ceil(currentPage() / displayPage) * displayPage;
     }
     // prev以及next要顯示出來，因此第0項與最後一項要扣除 
-    for (let i = 1; i < links.length - 1; i++) {
-        links[i].style.display = "none";
+    for (let i = 1; i < links().length - 1; i++) {
+        links()[i].style.display = "none";
     }
     // 最後一頁時候，尾頁會超過總頁數故將此縮到總頁數，link需扣除prev以及next故-2
-    if (end > (links.length - 2)) end = links.length - 2;
+    if (end > (links().length - 2)) end = links().length - 2;
 
     // 顯示供使用者按的按鈕 
     for (let j = start; j <= end; j++) {
-        links[j].style.display = "block";
+        links()[j].style.display = "block";
     }
 }
 
